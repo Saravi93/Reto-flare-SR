@@ -2,13 +2,13 @@
 
 ## Flujo Crítico Seleccionado
 
-**Flujo**: Login → Carga de Métricas → Aplicación de Filtros → Validación de Resultados
+**Flujo**: Login → Agregar Producto al Carrito → Navegar al Checkout → Validar Datos
 
 Este flujo es crítico porque:
-- Es el flujo principal de uso del dashboard
-- Integra múltiples componentes (autenticación, carga de datos, filtrado)
+- Es el flujo principal de compra del e-commerce
+- Integra múltiples componentes (autenticación, carrito, checkout)
 - Es el primer punto de contacto del usuario con la funcionalidad core
-- Cualquier fallo aquí bloquea completamente el uso del sistema
+- Cualquier fallo aquí bloquea completamente el proceso de compra
 
 ---
 
@@ -73,9 +73,9 @@ Este flujo es crítico porque:
 class LoginPage {
   constructor(page) {
     this.page = page;
-    this.emailInput = 'input[name="email"]';
-    this.passwordInput = 'input[name="password"]';
-    this.loginButton = 'button[type="submit"]';
+    this.emailInput = 'input[data-qa="login-email"]';
+    this.passwordInput = 'input[data-qa="login-password"]';
+    this.loginButton = 'button[data-qa="login-button"]';
   }
   
   async login(email, password) {
@@ -139,56 +139,49 @@ class AuthAPI {
 
 ## Estructura del Flujo Crítico Automatizado
 
-### Test: Flujo Completo Dashboard
+### Test: Flujo Completo E-commerce
 
 ```javascript
-test('Flujo crítico: Login → Carga → Filtros → Validación', async ({ page, request }) => {
+test('Flujo crítico: Login → Carrito → Checkout → Validación', async ({ page, request }) => {
   // 1. Login
   const loginPage = new LoginPage(page);
   await loginPage.navigate();
   await loginPage.login('test@example.com', 'password123');
   await expect(page.locator('text=Logged in as')).toBeVisible();
   
-  // 2. Carga de Métricas
-  const dashboardPage = new DashboardPage(page);
-  await dashboardPage.waitForMetricsLoad();
-  const metricsCount = await dashboardPage.getMetricsCount();
-  expect(metricsCount).toBeGreaterThan(0);
+  // 2. Agregar Producto al Carrito
+  const homePage = new HomePage(page);
+  await homePage.navigate();
+  await homePage.addProductToCartAndVerifyModal(0);
+  await homePage.viewCartFromModal();
   
-  // 3. Aplicación de Filtros
-  await dashboardPage.applyDateFilter('2024-01-01', '2024-01-31');
-  await dashboardPage.applyCategoryFilter('Marketing');
-  await dashboardPage.waitForFilteredResults();
+  // 3. Navegar al Checkout
+  const cartPage = new CartPage(page);
+  await cartPage.proceedToCheckout();
   
-  // 4. Validación de Resultados
-  const filteredMetrics = await dashboardPage.getDisplayedMetrics();
+  // 4. Validación de Datos
+  const checkoutPage = new CheckoutPage(page);
+  const isAddressLoaded = await checkoutPage.isAddressLoaded();
+  expect(isAddressLoaded).toBeTruthy();
   
   // Validación cruzada con API
-  const apiResponse = await request.get('/api/metrics', {
-    params: {
-      startDate: '2024-01-01',
-      endDate: '2024-01-31',
-      category: 'Marketing'
-    }
+  const apiResponse = await request.get('/api/getUserDetailByEmail', {
+    params: { email: 'test@example.com' }
   });
   
-  const apiMetrics = await apiResponse.json();
-  expect(filteredMetrics).toMatchObject(apiMetrics);
-  
-  // Validación de datos mostrados
-  filteredMetrics.forEach(metric => {
-    expect(metric.date).toBeWithinRange('2024-01-01', '2024-01-31');
-    expect(metric.category).toBe('Marketing');
-  });
+  const apiUser = await apiResponse.json();
+  const uiUserName = await loginPage.getLoggedInMessage();
+  expect(uiUserName).toContain(apiUser.name);
 });
 ```
 
 ### Componentes del Flujo
 
 1. **LoginPage**: Maneja autenticación
-2. **DashboardPage**: Maneja carga y visualización de métricas
-3. **FilterComponent**: Maneja aplicación de filtros
-4. **MetricsAPI**: Servicio para validación cruzada con API
+2. **HomePage**: Maneja navegación y agregar productos
+3. **CartPage**: Maneja gestión del carrito
+4. **CheckoutPage**: Maneja proceso de checkout
+5. **AuthAPI / UserAPI**: Servicios para validación cruzada con API
 
 ---
 
@@ -234,8 +227,7 @@ test('Flujo crítico: Login → Carga → Filtros → Validación', async ({ pag
 ```
 data/
 ├── loginTestData.json      # Combinaciones de login
-├── metricsTestData.json    # Datos de métricas
-└── filterTestData.json     # Combinaciones de filtros
+└── productTestData.json    # Datos de productos
 ```
 
 ---
@@ -291,4 +283,3 @@ data/
 - **Detección temprana**: Bugs detectados antes de producción
 - **Confianza**: Mayor confianza en releases
 - **Escalabilidad**: Fácil agregar nuevos tests sin aumentar tiempo significativamente
-

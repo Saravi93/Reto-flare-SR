@@ -2,12 +2,14 @@
 
 ## Contexto del Proyecto
 
-El dashboard de métricas digitales permite a usuarios autenticados:
-- Visualizar resultados de campañas
-- Filtrar información por fecha o categoría
-- Exportar reportes
+El sitio Automation Exercise es una plataforma de e-commerce que permite a usuarios autenticados:
+- Navegar y buscar productos
+- Agregar productos al carrito de compras
+- Gestionar el carrito (actualizar cantidades, eliminar productos)
+- Completar el proceso de checkout
+- Gestionar su cuenta de usuario
 
-El objetivo es validar el flujo completo: **Login → Carga de métricas → Aplicación de filtros → Validación de resultados** antes del merge a develop.
+El objetivo es validar el flujo completo: **Login → Navegación de Productos → Agregar al Carrito → Checkout → Validación de Datos** antes del merge a develop.
 
 ---
 
@@ -18,9 +20,9 @@ El objetivo es validar el flujo completo: **Login → Carga de métricas → Apl
 
 **Alcance**:
 - Autenticación (login/logout)
-- Carga y visualización de métricas
-- Filtrado por fecha y categoría
-- Exportación de reportes
+- Navegación y visualización de productos
+- Gestión del carrito de compras
+- Proceso de checkout
 - Validación de permisos y acceso
 
 **Metodología**: Casos de prueba basados en escenarios de usuario, cubriendo flujos happy path y casos negativos.
@@ -50,8 +52,8 @@ El objetivo es validar el flujo completo: **Login → Carga de métricas → Apl
 
 **Alcance**:
 - Login exitoso
-- Carga básica de métricas
-- Aplicación de un filtro simple
+- Agregar producto al carrito
+- Navegar al checkout
 - Verificación de datos mostrados
 
 **Metodología**: Subconjunto mínimo de tests críticos, ejecutados pre-merge.
@@ -83,8 +85,8 @@ Cada caso incluye:
 
 ### Priorización
 
-1. **Crítica**: Flujos core que bloquean funcionalidad principal (login, carga de métricas)
-2. **Alta**: Funcionalidades importantes para el negocio (filtros, exportación)
+1. **Crítica**: Flujos core que bloquean funcionalidad principal (login, agregar al carrito, checkout)
+2. **Alta**: Funcionalidades importantes para el negocio (gestión de carrito, validación de datos)
 3. **Media**: Mejoras de UX y validaciones adicionales
 4. **Baja**: Casos edge y mejoras menores
 
@@ -119,7 +121,7 @@ Cada caso incluye:
 ### Checklist Pre-Merge
 
 1. **Smoke Tests**: Todos los smoke tests deben pasar
-2. **Flujo Crítico**: Login → Carga → Filtro → Validación debe funcionar end-to-end
+2. **Flujo Crítico**: Login → Agregar al Carrito → Checkout → Validación debe funcionar end-to-end
 3. **Tests de Regresión**: Suite de regresión completa sin fallos
 4. **Validación de Código**: 
    - Cobertura de tests > 70% para código nuevo
@@ -194,7 +196,7 @@ Cada caso incluye:
 
 ### Niveles de Automatización
 
-1. **Nivel 1 - Crítico**: Flujos core (login, carga, filtros básicos) - 100% automatizado
+1. **Nivel 1 - Crítico**: Flujos core (login, agregar al carrito, checkout) - 100% automatizado
 2. **Nivel 2 - Importante**: Funcionalidades principales - 80% automatizado
 3. **Nivel 3 - Complementario**: Casos edge y mejoras - 50% automatizado
 
@@ -221,4 +223,3 @@ Cada caso incluye:
 - Identificación de tests flaky
 - Optimización de suite de pruebas
 - Mejora continua de procesos
-

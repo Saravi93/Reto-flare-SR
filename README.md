@@ -1,428 +1,282 @@
-# Proyecto de Automatización QA - Automation Exercise
+# Proyecto de automatización QA - Automation Exercise
 
-Este proyecto contiene la automatización completa de pruebas UI y API para el sitio [Automation Exercise](https://automationexercise.com/), desarrollado como parte de una prueba de validación técnica QA.
+Hola! Este proyecto contiene todas las pruebas automatizadas que he creado para el sitio Automation Exercise. Básicamente, automatizo los flujos más importantes tanto de la interfaz web como de las APIs para asegurarme de que todo funciona bien.
 
-## 📋 Tabla de Contenidos
+Mi objetivo principal fue demostrar que puedo:
+- Diseñar pruebas que realmente funcionen
+- Escribir código de automatización que sea fácil de entender y mantener
+- Organizar bien un proyecto para que cualquiera pueda trabajar con él
+- Documentar todo de forma clara
 
-- [Descripción](#descripción)
-- [Tecnologías](#tecnologías)
-- [Estructura del Proyecto](#estructura-del-proyecto)
-- [Instalación](#instalación)
-- [Configuración](#configuración)
-- [Ejecución de Tests](#ejecución-de-tests)
-- [Documentación Teórica](#documentación-teórica)
-- [Arquitectura](#arquitectura)
-- [Casos de Prueba](#casos-de-prueba)
+Todo está hecho pensando en que sea simple de mantener y que se pueda seguir agregando más pruebas sin complicarse la vida.
 
-## 🎯 Descripción
+Tabla de Contenidos
 
-Este proyecto implementa una suite completa de automatización de pruebas que cubre:
+- [Descripción General](#descripción-general)
+- [Tecnologías que usé](#tecnologías-que-usé)
+- [Cómo está organizado el proyecto](#cómo-está-organizado-el-proyecto)
+- [Cómo instalarlo](#cómo-instalarlo)
+- [Cómo configurarlo](#cómo-configurarlo)
+- [Cómo ejecutar las pruebas](#cómo-ejecutar-las-pruebas)
+- [Qué pruebas están incluidas](#qué-pruebas-están-incluidas)
+- [Ver los reportes](#ver-los-reportes)
+- [Problemas comunes y cómo solucionarlos](#problemas-comunes-y-cómo-solucionarlos)
+- [Sobre mí](#sobre-mí)
 
-- **Pruebas UI**: Login, Carrito, Checkout, Logout
-- **Pruebas API**: Autenticación, Productos, Creación de Cuenta, Casos Edge
-- **Pruebas de Integración**: Validación cruzada UI + API
-- **Data-Driven Testing**: Tests parametrizados con datos externos
+Descripción General
 
-Además, incluye documentación teórica completa sobre estrategia de pruebas, casos de prueba y propuesta de automatización.
+Este proyecto automatiza los flujos más importantes del sitio Automation Exercise. Incluye:
 
-## 🛠 Tecnologías
+**Pruebas de Interfaz (UI):**
+- Login y logout de usuarios
+- Agregar productos al carrito
+- Verificar que el carrito muestre bien los productos (nombre, precio, cantidad)
+- Actualizar cantidades en el carrito
+- Eliminar productos del carrito
+- Proceso de checkout completo
+- Validar que los datos del usuario se carguen correctamente
 
-- **Playwright**: Framework de automatización UI
-- **JavaScript/Node.js**: Lenguaje de programación
-- **Axios**: Cliente HTTP para pruebas API
-- **Jest/Playwright Test**: Test runner
-- **Page Object Model**: Patrón de diseño para mantenibilidad
+**Pruebas de API:**
+- Login a través de la API
+- Crear nuevas cuentas de usuario
+- Obtener información de productos
+- Validar respuestas y códigos de estado
+- Casos especiales (edge cases) como credenciales inválidas
 
-## 📁 Estructura del Proyecto
+**Pruebas de Integración:**
+- Validar que los datos entre UI y API coincidan (validación cruzada)
+- Asegurarme de que lo que veo en la pantalla sea consistente con lo que devuelve la API
+
+**Data-Driven Testing:**
+- Pruebas de login con múltiples usuarios usando datos externos (archivos JSON)
+
+Todo está organizado de forma modular para que sea fácil encontrar las cosas y agregar más pruebas después.
+
+Tecnologías que usé
+
+- **Playwright** con JavaScript (no TypeScript, aunque Playwright lo soporta)
+- **Node.js** como entorno de ejecución
+- **Axios** para hacer las llamadas a las APIs
+- **Git** para control de versiones
+- Los reportes HTML que Playwright genera automáticamente
+
+Cómo está organizado el proyecto
 
 ```
-prueba-qa/
-├── README.md                          # Este archivo
-├── package.json                       # Dependencias y scripts
-├── playwright.config.js               # Configuración de Playwright
-├── .gitignore                         # Archivos a ignorar
-│
-├── docs/                              # Documentación teórica
-│   ├── 01-estrategia-pruebas.md      # Estrategia general de pruebas
-│   ├── 02-casos-prueba.md            # Casos de prueba representativos
-│   └── 03-propuesta-automatizacion.md # Propuesta de automatización
-│
-├── tests/                             # Tests de automatización
-│   ├── ui/                           # Tests de interfaz de usuario
+Reto-flare-SR/
+├── tests/                    # Aquí están todos los tests
+│   ├── ui/                   # Tests de interfaz web
 │   │   ├── login.spec.js
 │   │   ├── login-data-driven.spec.js
+│   │   ├── logout.spec.js
 │   │   ├── cart.spec.js
-│   │   ├── checkout.spec.js
-│   │   └── logout.spec.js
-│   ├── api/                          # Tests de API
+│   │   └── checkout.spec.js
+│   ├── api/                  # Tests de API
 │   │   ├── login.api.spec.js
-│   │   ├── products.api.spec.js
 │   │   ├── createAccount.api.spec.js
+│   │   ├── products.api.spec.js
 │   │   └── edgeCases.api.spec.js
-│   └── integration/                  # Tests de integración
+│   └── integration/          # Tests que combinan UI + API
 │       └── crossValidation.spec.js
 │
-├── pages/                            # Page Object Model
+├── pages/                    # Page Objects - cada página tiene su clase
 │   ├── LoginPage.js
 │   ├── HomePage.js
 │   ├── CartPage.js
 │   └── CheckoutPage.js
 │
-├── api/                              # Servicios API
-│   ├── auth.api.js
-│   ├── products.api.js
-│   └── user.api.js
+├── api/                      # Servicios para llamar a las APIs
+│   ├── auth.api.js          # Login, logout, etc.
+│   ├── products.api.js      # Obtener productos
+│   └── user.api.js          # Crear usuarios, gestionar cuentas
 │
-├── utils/                            # Utilidades
-│   ├── testData.js                   # Datos de prueba
-│   ├── helpers.js                    # Funciones auxiliares
-│   └── config.js                     # Configuración
+├── utils/                    # Utilidades y configuración
+│   ├── config.js            # URLs, timeouts, credenciales
+│   ├── testData.js          # Datos de prueba
+│   └── helpers.js           # Funciones auxiliares
 │
-├── data/                             # Datos externos
-│   └── loginTestData.json            # Datos para data-driven testing
-│
-└── reports/                          # Reportes generados (gitignored)
-    ├── playwright-report/
-    └── test-results/
+├── playwright.config.js     # Configuración de Playwright
+└── package.json             # Dependencias y scripts
 ```
 
-## 🚀 Instalación
+Cómo instalarlo
 
-### Prerrequisitos
-
-- Node.js (versión 14 o superior)
-- npm o yarn
-
-### Pasos de Instalación
-
-1. **Clonar o descargar el proyecto**
-
-```bash
-cd prueba-qa
-```
-
-2. **Instalar dependencias**
+Primero, instala las dependencias:
 
 ```bash
 npm install
 ```
 
-3. **Instalar navegadores de Playwright**
+Luego, instala los navegadores que Playwright necesita:
 
 ```bash
 npx playwright install
 ```
 
-O instalar navegadores específicos:
+Cómo configurarlo
 
-```bash
-npx playwright install chromium
-npx playwright install firefox
-npx playwright install webkit
-```
+La configuración principal está en `playwright.config.js`. Ahí puedes cambiar cosas como:
+- La URL base del sitio (actualmente: https://automationexercise.com)
+- Los timeouts (cuánto tiempo esperar antes de que falle un test)
+- Qué navegador usar (por defecto usa Chrome)
 
-## ⚙️ Configuración
+Los datos de prueba (como credenciales de usuario) están en `utils/config.js` y `utils/testData.js`. Si necesitas cambiar algo, esos son los archivos.
 
-### Variables de Configuración
+Cómo ejecutar las pruebas
 
-El archivo `utils/config.js` contiene la configuración centralizada:
-
-- **baseURL**: URL base de la aplicación (https://automationexercise.com)
-- **apiBaseURL**: URL base de la API
-- **timeouts**: Timeouts para navegación, elementos y API
-- **testUsers**: Credenciales de prueba
-
-### Personalizar Configuración
-
-Puedes modificar `utils/config.js` para ajustar:
-- URLs de diferentes ambientes
-- Timeouts según necesidades
-- Credenciales de prueba
-
-## 🧪 Ejecución de Tests
-
-### Ejecutar Todos los Tests
-
+**Ejecutar todas las pruebas:**
 ```bash
 npm test
 ```
+o
+```bash
+npx playwright test
+```
 
-### Ejecutar Tests UI
-
+**Ejecutar solo pruebas de interfaz (UI):**
 ```bash
 npm run test:ui
 ```
 
-### Ejecutar Tests API
-
+**Ejecutar solo pruebas de API:**
 ```bash
 npm run test:api
 ```
 
-### Ejecutar Tests de Integración
-
+**Ejecutar pruebas de integración:**
 ```bash
 npm run test:integration
 ```
 
-### Ejecutar Tests Específicos
-
+**Ejecutar un grupo específico de pruebas:**
 ```bash
-# Tests de login UI
-npm run test:ui:login
-
-# Tests de carrito UI
-npm run test:ui:cart
-
-# Tests de checkout UI
-npm run test:ui:checkout
-
-# Tests de logout UI
-npm run test:ui:logout
+npm run test:ui:login      # Solo tests de login UI
+npm run test:ui:cart       # Solo tests del carrito
+npm run test:ui:checkout   # Solo tests de checkout
+npm run test:ui:logout     # Solo tests de logout
 ```
 
-### Ejecutar en Modo Headed (con navegador visible)
-
+**Ejecutar un test específico:**
 ```bash
-npm run test:headed
+npx playwright test tests/ui/cart.spec.js --grep "TC-CART-003"
 ```
 
-### Ejecutar en Modo Debug
+**Ver las pruebas ejecutándose (modo headed):**
+```bash
+npm run test:ui:headed
+```
 
+**Modo debug (para ver qué está pasando paso a paso):**
 ```bash
 npm run test:debug
 ```
 
-### Ver Reportes
+**Modo interactivo (interfaz visual de Playwright):**
+```bash
+npx playwright test --ui
+```
+
+Qué pruebas están incluidas
+
+### Pruebas de Interfaz (UI)
+
+**Login (`login.spec.js`):**
+- Login exitoso con credenciales válidas
+- Validar que aparece el mensaje "Logged in as [nombre]"
+- Login con credenciales inválidas
+- Validar mensajes de error
+
+**Login Data-Driven (`login-data-driven.spec.js`):**
+- Pruebas de login con múltiples usuarios usando datos de un archivo JSON
+- Validar diferentes escenarios con diferentes credenciales
+
+**Logout (`logout.spec.js`):**
+- Cerrar sesión correctamente
+- Validar que después del logout se redirige a la página de login
+
+**Carrito (`cart.spec.js`):**
+- Agregar productos al carrito
+- Verificar que aparece el modal de confirmación
+- Navegar al carrito desde el modal
+- Verificar que los productos se muestran correctamente (nombre, precio, cantidad)
+- Actualizar la cantidad de productos
+- Eliminar productos del carrito
+- Validar que el carrito quede vacío
+
+**Checkout (`checkout.spec.js`):**
+- Navegar desde el carrito al checkout
+- Validar que la dirección del usuario se carga automáticamente
+- Agregar comentarios en la orden
+- Validar que todos los datos se muestran correctamente
+
+### Pruebas de API
+
+**Login API (`login.api.spec.js`):**
+- Login exitoso (código 200)
+- Login con password inválido (código 404)
+- Validar estructura de las respuestas
+
+**Crear Cuenta (`createAccount.api.spec.js`):**
+- Crear nuevas cuentas de usuario
+- Validar que se crean correctamente
+
+**Productos (`products.api.spec.js`):**
+- Obtener lista de productos
+- Obtener detalles de un producto específico
+- Validar estructura de datos
+
+**Casos Especiales (`edgeCases.api.spec.js`):**
+- Probar escenarios límite y casos especiales
+- Validar manejo de errores
+
+### Pruebas de Integración
+
+**Validación Cruzada (`crossValidation.spec.js`):**
+- Comparar datos entre UI y API
+- Asegurar consistencia entre lo que muestra la interfaz y lo que devuelve la API
+
+Ver los reportes
+
+Después de ejecutar las pruebas, puedes ver un reporte visual con:
 
 ```bash
 npm run test:report
 ```
 
-Esto abrirá el reporte HTML en el navegador.
-
-### Ejecutar Tests en Navegadores Específicos
+o
 
 ```bash
-# Solo Chromium
-npx playwright test --project=chromium
-
-# Solo Firefox
-npx playwright test --project=firefox
-
-# Solo WebKit
-npx playwright test --project=webkit
+npx playwright show-report
 ```
 
-## 📚 Documentación Teórica
+El reporte incluye:
+- Qué pruebas pasaron y cuáles fallaron
+- Screenshots cuando algo falla
+- Videos de las pruebas que fallaron
+- Trazas de lo que pasó paso a paso
 
-La documentación teórica completa se encuentra en la carpeta `docs/`:
+Problemas comunes y cómo solucionarlos
 
-1. **Estrategia de Pruebas** (`docs/01-estrategia-pruebas.md`)
-   - Tipos de pruebas
-   - Metodología
-   - Estructura de ambientes
-   - Validaciones pre-merge
-   - Manejo de evidencias y reportes
-
-2. **Casos de Prueba** (`docs/02-casos-prueba.md`)
-   - Casos de prueba representativos
-   - Estructura de casos
-   - Priorización
-   - Matriz de trazabilidad
-
-3. **Propuesta de Automatización** (`docs/03-propuesta-automatizacion.md`)
-   - Herramientas y frameworks
-   - Arquitectura
-   - Estrategia de ejecución
-   - Métricas de éxito
-
-## 🏗 Arquitectura
-
-### Page Object Model (POM)
-
-Cada página tiene su propia clase que encapsula:
-- Selectores de elementos
-- Métodos de interacción
-- Validaciones específicas
-
-**Ejemplo:**
-```javascript
-const loginPage = new LoginPage(page);
-await loginPage.navigate();
-await loginPage.login('email@example.com', 'password');
-```
-
-### Servicios API
-
-Los servicios API encapsulan las llamadas HTTP:
-- Manejo de requests/responses
-- Manejo de errores
-- Configuración de headers
-
-**Ejemplo:**
-```javascript
-const response = await authAPI.login('email@example.com', 'password');
-expect(response.status).toBe(200);
-```
-
-### Utilidades
-
-Funciones reutilizables para:
-- Generación de datos de prueba
-- Validaciones comunes
-- Helpers de formateo
-
-## 📝 Casos de Prueba
-
-### Tests UI
-
-#### Login (`tests/ui/login.spec.js`)
-- ✅ Login exitoso
-- ✅ Login fallido por contraseña incorrecta
-- ✅ Login fallido por usuario inexistente
-- ✅ Validación de mensajes de error
-
-#### Login Data-Driven (`tests/ui/login-data-driven.spec.js`)
-- ✅ Múltiples combinaciones de login inválido
-- ✅ Validación de formatos de email
-- ✅ Campos vacíos
-
-#### Carrito (`tests/ui/cart.spec.js`)
-- ✅ Agregar producto al carrito
-- ✅ Validar modal de confirmación
-- ✅ Verificar nombre, cantidad y precio
-- ✅ Actualizar cantidad
-- ✅ Eliminar producto
-- ✅ Validar carrito vacío
-
-#### Checkout (`tests/ui/checkout.spec.js`)
-- ✅ Proceder al checkout
-- ✅ Validar dirección cargada
-- ✅ Añadir comentario
-- ✅ Place Order (sin pago real)
-- ✅ Validar mensaje final
-
-#### Logout (`tests/ui/logout.spec.js`)
-- ✅ Clic en Logout
-- ✅ Validar redirección a Login
-- ✅ Validar acceso bloqueado sin sesión
-
-### Tests API
-
-#### Login API (`tests/api/login.api.spec.js`)
-- ✅ Login exitoso (200)
-- ✅ Login con password inválido (404)
-- ✅ Login con email inexistente (404)
-- ✅ Validar estructura JSON
-
-#### Productos API (`tests/api/products.api.spec.js`)
-- ✅ Endpoint responde 200
-- ✅ Validar existencia de productos
-- ✅ Verificar estructura (id, name, price)
-- ✅ Validar IDs no duplicados
-
-#### Crear Cuenta API (`tests/api/createAccount.api.spec.js`)
-- ✅ Creación exitosa con email nuevo
-- ✅ Intento con email existente (debe fallar)
-- ✅ Validar campos requeridos
-
-#### Casos Edge API (`tests/api/edgeCases.api.spec.js`)
-- ✅ Parámetros vacíos
-- ✅ Parámetros incorrectos
-- ✅ Sin headers requeridos
-- ✅ Validar estructura de errores
-- ✅ Validar tiempos de respuesta
-- ✅ Caracteres especiales
-- ✅ Límites de longitud
-- ✅ Métodos HTTP incorrectos
-
-### Tests de Integración
-
-#### Validación Cruzada (`tests/integration/crossValidation.spec.js`)
-- ✅ Login por UI y validar con API
-- ✅ Consistencia de datos entre UI y API
-- ✅ Validar que datos mostrados coinciden
-
-## 🔧 Scripts Disponibles
-
-| Script | Descripción |
-|--------|-------------|
-| `npm test` | Ejecuta todos los tests |
-| `npm run test:ui` | Ejecuta solo tests UI |
-| `npm run test:api` | Ejecuta solo tests API |
-| `npm run test:integration` | Ejecuta tests de integración |
-| `npm run test:headed` | Ejecuta tests con navegador visible |
-| `npm run test:debug` | Ejecuta tests en modo debug |
-| `npm run test:report` | Abre reporte HTML de resultados |
-
-## 📊 Reportes
-
-Los reportes se generan automáticamente después de cada ejecución:
-
-- **HTML Report**: `playwright-report/index.html`
-- **JSON Report**: `test-results/results.json`
-- **Screenshots**: Capturados automáticamente en fallos
-- **Videos**: Grabados automáticamente en fallos (si está configurado)
-
-Para ver el reporte HTML:
-
+**Error: "No se encuentran los navegadores"**
 ```bash
-npm run test:report
+npx playwright install
 ```
 
-## 🐛 Troubleshooting
+**Error: "No se encuentra el archivo de tests"**
+Verifica que estés en la carpeta correcta del proyecto. Deberías ver una carpeta llamada `tests`.
 
-### Problemas Comunes
+**Error: "Variables o datos faltantes"**
+Revisa los archivos en `utils/config.js` y `utils/testData.js`. Ahí están las credenciales y configuraciones.
 
-1. **Error: "Browser not found"**
-   ```bash
-   npx playwright install
-   ```
+**Las pruebas fallan porque el sitio está lento**
+El sitio de Automation Exercise a veces está bajo carga pesada. Los timeouts están configurados para esperar un poco más, pero si sigue fallando, puedes aumentar los tiempos en `playwright.config.js`.
 
-2. **Tests fallan por timeouts**
-   - Aumentar timeouts en `playwright.config.js`
-   - Verificar conexión a internet
-   - Verificar que el sitio está accesible
+**Error: "Target page has been closed"**
+Este error puede pasar cuando navegas muy rápido entre páginas. Ya lo corregí en los tests del carrito, pero si aparece en otros lugares, asegúrate de esperar a que la página cargue completamente antes de hacer verificaciones.
 
-3. **Error de módulos no encontrados**
-   ```bash
-   npm install
-   ```
+Sobre mí
 
-4. **Tests flaky (inestables)**
-   - Revisar selectores en Page Objects
-   - Aumentar timeouts de espera
-   - Verificar condiciones de carrera
+**Sara Rojas**  
+QA Analyst | QA Manual & Automation
 
-## 📖 Buenas Prácticas Implementadas
-
-- ✅ **Page Object Model**: Separación de lógica de UI y tests
-- ✅ **Servicios API**: Centralización de llamadas API
-- ✅ **Data-Driven Testing**: Separación de datos y código
-- ✅ **Utilidades Reutilizables**: Código DRY
-- ✅ **Configuración Centralizada**: Fácil mantenimiento
-- ✅ **Reportes Automáticos**: Evidencias de ejecución
-- ✅ **Documentación Completa**: Fácil onboarding
-
-## 🤝 Contribuciones
-
-Este proyecto fue desarrollado como parte de una prueba técnica. Para mejoras o sugerencias:
-
-1. Revisar la estructura existente
-2. Seguir los patrones establecidos
-3. Mantener documentación actualizada
-4. Agregar tests para nuevas funcionalidades
-
-## 📄 Licencia
-
-Este proyecto es de uso educativo y para demostración de habilidades QA.
-
-## 👤 Autor
-
-Desarrollado como parte de prueba de validación técnica QA.
-
----
-
-**Nota**: Este proyecto está configurado para trabajar con el sitio [Automation Exercise](https://automationexercise.com/), que es un sitio web de e-commerce libre de producción diseñado específicamente para testing.
 

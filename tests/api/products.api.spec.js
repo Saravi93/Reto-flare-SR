@@ -1,7 +1,3 @@
-/**
- * Tests API para Productos
- */
-
 const { test, expect } = require('@playwright/test');
 const productsAPI = require('../../api/products.api');
 const { validateAPIResponse } = require('../../utils/helpers');
@@ -20,7 +16,6 @@ test.describe('Products API Tests', () => {
     expect(response.status).toBe(200);
     expect(response.data).toBeTruthy();
     
-    // Verificar que hay productos
     if (response.data.products) {
       expect(Array.isArray(response.data.products)).toBeTruthy();
       expect(response.data.products.length).toBeGreaterThan(0);
@@ -43,16 +38,12 @@ test.describe('Products API Tests', () => {
     
     expect(products.length).toBeGreaterThan(0);
     
-    // Validar estructura del primer producto
     const firstProduct = products[0];
     const requiredFields = ['id', 'name', 'price'];
     const hasRequiredFields = validateAPIResponse(firstProduct, requiredFields);
     
-    // Algunos productos pueden tener diferentes estructuras, validar al menos que tenga datos
     expect(firstProduct).toBeTruthy();
     expect(typeof firstProduct).toBe('object');
-    
-    // Verificar que tiene al menos id o name
     expect(firstProduct.id !== undefined || firstProduct.name !== undefined).toBeTruthy();
   });
 
@@ -70,12 +61,10 @@ test.describe('Products API Tests', () => {
     
     expect(products.length).toBeGreaterThan(0);
     
-    // Extraer IDs
     const ids = products
       .map(product => product.id)
       .filter(id => id !== undefined);
     
-    // Verificar que no hay duplicados
     const uniqueIds = [...new Set(ids)];
     expect(ids.length).toBe(uniqueIds.length);
   });

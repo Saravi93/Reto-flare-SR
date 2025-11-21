@@ -1,12 +1,7 @@
-/**
- * Page Object para la página de Checkout
- */
-
 class CheckoutPage {
   constructor(page) {
     this.page = page;
     
-    // Selectores
     this.addressDetails = '.address_info';
     this.reviewOrder = '.review-payment';
     this.commentTextarea = 'textarea[name="message"]';
@@ -21,24 +16,15 @@ class CheckoutPage {
     this.downloadInvoiceButton = 'a[href*="download_invoice"]';
   }
 
-  /**
-   * Navega a la página de checkout
-   */
   async navigate() {
     await this.page.goto('/checkout');
   }
 
-  /**
-   * Verifica que la dirección del usuario esté cargada
-   * @returns {Promise<boolean>} True si la dirección está visible
-   */
   async isAddressLoaded() {
     try {
-      // Buscar el heading "Address Details" o cualquier contenido de dirección
       const addressHeading = await this.page.locator('h2:has-text("Address Details")').isVisible({ timeout: 5000 });
       if (addressHeading) return true;
       
-      // Alternativa: buscar listas con dirección
       const addressList = await this.page.locator('h3:has-text("Your delivery address")').isVisible({ timeout: 3000 });
       return addressList;
     } catch (error) {
@@ -46,17 +32,11 @@ class CheckoutPage {
     }
   }
 
-  /**
-   * Obtiene la dirección mostrada
-   * @returns {Promise<string>} Texto de la dirección
-   */
   async getAddress() {
     try {
-      // Buscar el contenido de dirección en las listas
       const addressSection = await this.page.locator('h2:has-text("Address Details")').locator('..').textContent();
       if (addressSection) return addressSection;
       
-      // Alternativa: obtener texto de las listas de dirección
       const deliveryAddress = await this.page.locator('h3:has-text("Your delivery address")').locator('..').textContent();
       return deliveryAddress || '';
     } catch (error) {
@@ -64,25 +44,14 @@ class CheckoutPage {
     }
   }
 
-  /**
-   * Añade un comentario al pedido
-   * @param {string} comment - Comentario a añadir
-   */
   async addComment(comment) {
     await this.page.fill(this.commentTextarea, comment);
   }
 
-  /**
-   * Procede a colocar el pedido (sin pago real)
-   */
   async placeOrder() {
     await this.page.click(this.placeOrderButton);
   }
 
-  /**
-   * Completa el formulario de pago (para testing, no procesa pago real)
-   * @param {Object} paymentData - Datos de pago
-   */
   async fillPaymentForm(paymentData = {}) {
     const defaultData = {
       nameOnCard: 'Test User',
@@ -101,17 +70,10 @@ class CheckoutPage {
     await this.page.fill(this.expiryYearInput, data.expiryYear);
   }
 
-  /**
-   * Confirma el pago (no procesa pago real)
-   */
   async confirmPayment() {
     await this.page.click(this.payButton);
   }
 
-  /**
-   * Verifica si el pedido fue colocado exitosamente
-   * @returns {Promise<boolean>} True si el mensaje de éxito es visible
-   */
   async isOrderPlaced() {
     try {
       await this.page.waitForSelector(this.successMessage, { timeout: 10000 });
@@ -121,10 +83,6 @@ class CheckoutPage {
     }
   }
 
-  /**
-   * Obtiene el mensaje de éxito
-   * @returns {Promise<string>} Mensaje de éxito
-   */
   async getSuccessMessage() {
     try {
       return await this.page.textContent(this.successMessage);
@@ -133,22 +91,14 @@ class CheckoutPage {
     }
   }
 
-  /**
-   * Descarga la factura (si está disponible)
-   */
   async downloadInvoice() {
     try {
       await this.page.click(this.downloadInvoiceButton);
     } catch (error) {
-      // La factura puede no estar disponible en todos los casos
       console.log('Invoice download button not available');
     }
   }
 
-  /**
-   * Verifica que el resumen del pedido esté visible
-   * @returns {Promise<boolean>} True si el resumen está visible
-   */
   async isReviewOrderVisible() {
     try {
       await this.page.waitForSelector(this.reviewOrder, { timeout: 5000 });

@@ -1,9 +1,4 @@
-/**
- * Datos de prueba centralizados
- */
-
 const testData = {
-  // Datos de login
   login: {
     valid: {
       email: 'viviana.rojas9418@gmail.com',
@@ -23,21 +18,15 @@ const testData = {
       password: ''
     }
   },
-  
-  // Datos de productos
   products: {
     firstProduct: {
       name: 'Blue Top',
       price: 'Rs. 500'
     }
   },
-  
-  // Datos de checkout
   checkout: {
     comment: 'This is a test order comment'
   },
-  
-  // Datos de creación de cuenta
   account: {
     newUser: {
       name: 'New Test User',
@@ -60,8 +49,6 @@ const testData = {
       password: 'password123'
     }
   },
-  
-  // Mensajes esperados
   messages: {
     login: {
       success: 'Logged in as',

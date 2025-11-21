@@ -1,7 +1,3 @@
-/**
- * Servicio API para autenticación
- */
-
 const axios = require('axios');
 const config = require('../utils/config');
 
@@ -10,12 +6,6 @@ class AuthAPI {
     this.baseURL = config.apiBaseURL;
   }
 
-  /**
-   * Realiza login mediante API
-   * @param {string} email - Email del usuario
-   * @param {string} password - Contraseña del usuario
-   * @returns {Promise<Object>} Respuesta de la API
-   */
   async login(email, password) {
     try {
       const response = await axios.post(`${this.baseURL}/login`, {
@@ -38,11 +28,6 @@ class AuthAPI {
     }
   }
 
-  /**
-   * Verifica si el usuario está autenticado
-   * @param {string} token - Token de autenticación
-   * @returns {Promise<Object>} Respuesta de la API
-   */
   async verifyToken(token) {
     try {
       const response = await axios.get(`${this.baseURL}/verifyToken`, {

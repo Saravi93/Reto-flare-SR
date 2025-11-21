@@ -26,17 +26,16 @@ Cada caso de prueba sigue esta estructura:
   - Acceso a la aplicación web
 - **Pasos**:
   1. Navegar a la página de Login
-  2. Ingresar email válido: `test@example.com`
-  3. Ingresar contraseña válida: `password123`
+  2. Ingresar email válido
+  3. Ingresar contraseña válida
   4. Hacer clic en botón "Login"
 - **Resultado Esperado**:
   - Usuario es autenticado exitosamente
-  - Redirección a dashboard de métricas
   - Mensaje de bienvenida visible: "Logged in as {user name}"
   - Opciones de menú de usuario autenticado disponibles
 - **Datos de Prueba**: 
-  - Email: `test@example.com`
-  - Password: `password123`
+  - Email válido registrado
+  - Password válida
 
 ### TC-AUTH-002: Login Fallido - Contraseña Incorrecta
 - **ID**: TC-AUTH-002
@@ -46,17 +45,16 @@ Cada caso de prueba sigue esta estructura:
 - **Precondiciones**: Usuario registrado en el sistema
 - **Pasos**:
   1. Navegar a la página de Login
-  2. Ingresar email válido: `test@example.com`
-  3. Ingresar contraseña incorrecta: `wrongpassword`
+  2. Ingresar email válido
+  3. Ingresar contraseña incorrecta
   4. Hacer clic en botón "Login"
 - **Resultado Esperado**:
   - Login falla
   - Mensaje de error visible: "Your email or password is incorrect!"
   - Usuario permanece en página de login
-  - Campos de entrada mantienen valores ingresados
 - **Datos de Prueba**: 
-  - Email: `test@example.com`
-  - Password: `wrongpassword`
+  - Email válido
+  - Password incorrecta
 
 ### TC-AUTH-003: Login Fallido - Usuario Inexistente
 - **ID**: TC-AUTH-003
@@ -66,16 +64,16 @@ Cada caso de prueba sigue esta estructura:
 - **Precondiciones**: Ninguna
 - **Pasos**:
   1. Navegar a la página de Login
-  2. Ingresar email inexistente: `nonexistent@example.com`
-  3. Ingresar cualquier contraseña: `password123`
+  2. Ingresar email inexistente
+  3. Ingresar cualquier contraseña
   4. Hacer clic en botón "Login"
 - **Resultado Esperado**:
   - Login falla
   - Mensaje de error visible: "Your email or password is incorrect!"
   - Usuario permanece en página de login
 - **Datos de Prueba**: 
-  - Email: `nonexistent@example.com`
-  - Password: `password123`
+  - Email inexistente
+  - Password cualquiera
 
 ### TC-AUTH-004: Validación de Campos Vacíos
 - **ID**: TC-AUTH-004
@@ -95,166 +93,258 @@ Cada caso de prueba sigue esta estructura:
 
 ---
 
-## Módulo: Carga de Métricas
+## Módulo: Carrito de Compras
 
-### TC-METRICS-001: Carga Exitosa de Métricas
-- **ID**: TC-METRICS-001
-- **Título**: Validar carga correcta de métricas después de login
+### TC-CART-001: Agregar Producto al Carrito
+- **ID**: TC-CART-001
+- **Título**: Validar agregar producto al carrito desde la página principal
 - **Prioridad**: Crítica
 - **Tipo**: Funcional / Smoke
 - **Precondiciones**: Usuario autenticado
 - **Pasos**:
-  1. Realizar login exitoso
-  2. Esperar carga de dashboard
-  3. Verificar visualización de métricas
+  1. Navegar a la página principal
+  2. Hacer clic en "Add to cart" de un producto
+  3. Verificar modal de confirmación
 - **Resultado Esperado**:
-  - Dashboard carga en < 3 segundos
-  - Métricas visibles y formateadas correctamente
-  - Gráficos/tablas renderizados
-  - Sin errores en consola
-- **Datos de Prueba**: Usuario con métricas asociadas
+  - Modal de confirmación aparece
+  - Producto se agrega al carrito
+  - Opciones "View Cart" y "Continue Shopping" disponibles
+- **Datos de Prueba**: Producto disponible en catálogo
 
-### TC-METRICS-002: Carga con Usuario Sin Métricas
-- **ID**: TC-METRICS-002
-- **Título**: Validar comportamiento cuando usuario no tiene métricas
+### TC-CART-002: Validar Modal de Confirmación
+- **ID**: TC-CART-002
+- **Título**: Validar que el modal de confirmación muestra información correcta
+- **Prioridad**: Alta
+- **Tipo**: Funcional
+- **Precondiciones**: Usuario autenticado
+- **Pasos**:
+  1. Agregar producto al carrito
+  2. Verificar contenido del modal
+- **Resultado Esperado**:
+  - Modal muestra mensaje de confirmación
+  - Contiene enlaces para ver carrito o continuar comprando
+- **Datos de Prueba**: Producto agregado
+
+### TC-CART-003: Verificar Información del Carrito
+- **ID**: TC-CART-003
+- **Título**: Validar que el carrito muestra nombre, cantidad y precio correctos
+- **Prioridad**: Crítica
+- **Tipo**: Funcional
+- **Precondiciones**: Usuario autenticado, producto en carrito
+- **Pasos**:
+  1. Agregar producto al carrito
+  2. Navegar al carrito
+  3. Verificar información mostrada
+- **Resultado Esperado**:
+  - Nombre del producto es correcto
+  - Cantidad es correcta (por defecto 1)
+  - Precio es correcto
+  - Total calculado correctamente
+- **Datos de Prueba**: Producto con precio conocido
+
+### TC-CART-004: Actualizar Cantidad en el Carrito
+- **ID**: TC-CART-004
+- **Título**: Validar actualización de cantidad de productos en el carrito
+- **Prioridad**: Alta
+- **Tipo**: Funcional
+- **Precondiciones**: Usuario autenticado, producto en carrito
+- **Pasos**:
+  1. Navegar al carrito
+  2. Actualizar cantidad de un producto
+  3. Verificar que se actualiza correctamente
+- **Resultado Esperado**:
+  - Cantidad se actualiza (si el sitio lo permite)
+  - Total se recalcula correctamente
+- **Datos de Prueba**: Cantidad inicial y nueva cantidad
+
+### TC-CART-005: Eliminar Producto del Carrito
+- **ID**: TC-CART-005
+- **Título**: Validar eliminación de productos del carrito
+- **Prioridad**: Alta
+- **Tipo**: Funcional
+- **Precondiciones**: Usuario autenticado, productos en carrito
+- **Pasos**:
+  1. Navegar al carrito
+  2. Eliminar un producto
+  3. Verificar que se elimina correctamente
+- **Resultado Esperado**:
+  - Producto se elimina del carrito
+  - Carrito se actualiza mostrando menos productos
+- **Datos de Prueba**: Producto en carrito
+
+### TC-CART-006: Validar Carrito Vacío
+- **ID**: TC-CART-006
+- **Título**: Validar comportamiento cuando el carrito está vacío
 - **Prioridad**: Media
 - **Tipo**: Funcional
-- **Precondiciones**: Usuario autenticado sin métricas asociadas
+- **Precondiciones**: Usuario autenticado
 - **Pasos**:
-  1. Realizar login exitoso
-  2. Esperar carga de dashboard
+  1. Eliminar todos los productos del carrito
+  2. Verificar estado del carrito
 - **Resultado Esperado**:
-  - Dashboard carga correctamente
-  - Mensaje informativo: "No hay métricas disponibles"
-  - UI no muestra errores
-- **Datos de Prueba**: Usuario nuevo sin datos
+  - Mensaje indicando que el carrito está vacío
+  - Opciones para continuar comprando disponibles
+- **Datos de Prueba**: Carrito con productos
 
 ---
 
-## Módulo: Filtrado
+## Módulo: Checkout
 
-### TC-FILTER-001: Filtro por Fecha - Rango Válido
-- **ID**: TC-FILTER-001
-- **Título**: Validar filtrado de métricas por rango de fechas
+### TC-CHECKOUT-001: Navegar al Checkout
+- **ID**: TC-CHECKOUT-001
+- **Título**: Validar navegación desde carrito al checkout
 - **Prioridad**: Crítica
 - **Tipo**: Funcional / Smoke
-- **Precondiciones**: 
-  - Usuario autenticado
-  - Métricas cargadas
+- **Precondiciones**: Usuario autenticado, productos en carrito
 - **Pasos**:
-  1. Seleccionar fecha inicial: `01/01/2024`
-  2. Seleccionar fecha final: `31/01/2024`
-  3. Aplicar filtro
-  4. Verificar resultados
+  1. Estar en la página del carrito
+  2. Hacer clic en "Proceed to Checkout"
 - **Resultado Esperado**:
-  - Métricas filtradas correctamente
-  - Solo se muestran métricas del rango seleccionado
-  - Contador de resultados actualizado
-  - Tiempo de respuesta < 2 segundos
-- **Datos de Prueba**: 
-  - Fecha inicio: `01/01/2024`
-  - Fecha fin: `31/01/2024`
+  - Navegación exitosa a página de checkout
+  - URL contiene "/checkout"
+- **Datos de Prueba**: Carrito con productos
 
-### TC-FILTER-002: Filtro por Categoría
-- **ID**: TC-FILTER-002
-- **Título**: Validar filtrado de métricas por categoría
-- **Prioridad**: Alta
+### TC-CHECKOUT-002: Validar Dirección del Usuario
+- **ID**: TC-CHECKOUT-002
+- **Título**: Validar que la dirección del usuario se carga automáticamente
+- **Prioridad**: Crítica
 - **Tipo**: Funcional
-- **Precondiciones**: 
-  - Usuario autenticado
-  - Métricas cargadas con múltiples categorías
+- **Precondiciones**: Usuario autenticado con dirección registrada
 - **Pasos**:
-  1. Seleccionar categoría del dropdown: `Marketing`
-  2. Aplicar filtro
-  3. Verificar resultados
+  1. Navegar al checkout
+  2. Verificar que la dirección está cargada
 - **Resultado Esperado**:
-  - Solo se muestran métricas de la categoría seleccionada
-  - Dropdown muestra categoría seleccionada
-  - Contador actualizado
-- **Datos de Prueba**: Categoría: `Marketing`
+  - Dirección del usuario es visible
+  - Información completa y correcta
+- **Datos de Prueba**: Usuario con dirección registrada
 
-### TC-FILTER-003: Filtro Combinado - Fecha y Categoría
-- **ID**: TC-FILTER-003
-- **Título**: Validar filtrado combinado de fecha y categoría
-- **Prioridad**: Alta
-- **Tipo**: Funcional
-- **Precondiciones**: 
-  - Usuario autenticado
-  - Métricas cargadas
-- **Pasos**:
-  1. Seleccionar fecha inicial: `01/01/2024`
-  2. Seleccionar fecha final: `31/01/2024`
-  3. Seleccionar categoría: `Marketing`
-  4. Aplicar filtro
-- **Resultado Esperado**:
-  - Métricas filtradas por ambos criterios
-  - Resultados cumplen ambas condiciones
-  - Filtros activos visibles en UI
-- **Datos de Prueba**: 
-  - Fechas: `01/01/2024` - `31/01/2024`
-  - Categoría: `Marketing`
-
-### TC-FILTER-004: Limpiar Filtros
-- **ID**: TC-FILTER-004
-- **Título**: Validar funcionalidad de limpiar filtros aplicados
+### TC-CHECKOUT-003: Agregar Comentario a la Orden
+- **ID**: TC-CHECKOUT-003
+- **Título**: Validar funcionalidad de agregar comentario en el checkout
 - **Prioridad**: Media
 - **Tipo**: Funcional
-- **Precondiciones**: Filtros aplicados
+- **Precondiciones**: Usuario autenticado, en página de checkout
 - **Pasos**:
-  1. Tener filtros aplicados (fecha y/o categoría)
-  2. Hacer clic en botón "Limpiar Filtros"
+  1. Navegar al checkout
+  2. Agregar comentario en el campo de texto
+  3. Verificar que se guarda
 - **Resultado Esperado**:
-  - Todos los filtros se resetean
-  - Se muestran todas las métricas sin filtrar
-  - Campos de filtro vuelven a valores por defecto
-- **Datos de Prueba**: Filtros activos
+  - Comentario se puede ingresar
+  - Comentario se mantiene al navegar
+- **Datos de Prueba**: Texto de comentario
+
+### TC-CHECKOUT-004: Proceso de Place Order
+- **ID**: TC-CHECKOUT-004
+- **Título**: Validar proceso de colocar orden (sin pago real)
+- **Prioridad**: Crítica
+- **Tipo**: Funcional
+- **Precondiciones**: Usuario autenticado, en checkout
+- **Pasos**:
+  1. Completar información de checkout
+  2. Hacer clic en "Place Order"
+  3. Verificar navegación
+- **Resultado Esperado**:
+  - Navegación a página de pago o confirmación
+  - Proceso continúa correctamente
+- **Datos de Prueba**: Información de checkout completa
+
+### TC-CHECKOUT-005: Validar Mensaje Final
+- **ID**: TC-CHECKOUT-005
+- **Título**: Validar mensaje o navegación después de completar orden
+- **Prioridad**: Alta
+- **Tipo**: Funcional
+- **Precondiciones**: Usuario autenticado, proceso de checkout iniciado
+- **Pasos**:
+  1. Completar proceso de checkout
+  2. Verificar mensaje final o navegación
+- **Resultado Esperado**:
+  - Mensaje de éxito visible (si aplica)
+  - Navegación correcta
+- **Datos de Prueba**: Orden completada
 
 ---
 
-## Módulo: Exportación de Reportes
+## Módulo: Logout
 
-### TC-EXPORT-001: Exportar Reporte en PDF
-- **ID**: TC-EXPORT-001
-- **Título**: Validar exportación de reporte en formato PDF
+### TC-LOGOUT-001: Cerrar Sesión
+- **ID**: TC-LOGOUT-001
+- **Título**: Validar funcionalidad de logout
 - **Prioridad**: Alta
 - **Tipo**: Funcional
-- **Precondiciones**: 
-  - Usuario autenticado
-  - Métricas cargadas (filtradas o no)
+- **Precondiciones**: Usuario autenticado
 - **Pasos**:
-  1. Cargar métricas (opcional: aplicar filtros)
-  2. Hacer clic en botón "Exportar PDF"
-  3. Verificar descarga
+  1. Hacer clic en "Logout"
+  2. Verificar redirección
 - **Resultado Esperado**:
-  - Archivo PDF se descarga correctamente
-  - Nombre de archivo incluye timestamp
-  - Contenido del PDF coincide con métricas mostradas
-  - Formato del PDF es legible y profesional
-- **Datos de Prueba**: Métricas actuales del dashboard
+  - Sesión se cierra correctamente
+  - Redirección a página de login
+- **Datos de Prueba**: Usuario autenticado
 
-### TC-EXPORT-002: Exportar Reporte en Excel
-- **ID**: TC-EXPORT-002
-- **Título**: Validar exportación de reporte en formato Excel
+### TC-LOGOUT-002: Validar Redirección después de Logout
+- **ID**: TC-LOGOUT-002
+- **Título**: Validar que después del logout se redirige correctamente
 - **Prioridad**: Alta
 - **Tipo**: Funcional
-- **Precondiciones**: 
-  - Usuario autenticado
-  - Métricas cargadas
+- **Precondiciones**: Usuario autenticado
 - **Pasos**:
-  1. Cargar métricas
-  2. Hacer clic en botón "Exportar Excel"
-  3. Verificar descarga
+  1. Hacer clic en "Logout"
+  2. Verificar URL y estado
 - **Resultado Esperado**:
-  - Archivo Excel (.xlsx) se descarga
-  - Datos exportados son correctos y completos
-  - Formato de columnas es adecuado
-- **Datos de Prueba**: Métricas actuales
+  - URL contiene "/login"
+  - Usuario no está autenticado
+- **Datos de Prueba**: Usuario autenticado
+
+### TC-LOGOUT-003: Acceso Restringido después de Logout
+- **ID**: TC-LOGOUT-003
+- **Título**: Validar que áreas protegidas requieren login después de logout
+- **Prioridad**: Media
+- **Tipo**: Funcional
+- **Precondiciones**: Usuario que hizo logout
+- **Pasos**:
+  1. Hacer logout
+  2. Intentar acceder a área protegida
+- **Resultado Esperado**:
+  - Acceso bloqueado o redirección a login
+  - Mensaje apropiado mostrado
+- **Datos de Prueba**: Área protegida (ej: /account)
+
+---
+
+## Módulo: APIs
+
+### TC-API-LOGIN-001: Login Exitoso por API
+- **ID**: TC-API-LOGIN-001
+- **Título**: Validar login exitoso mediante API
+- **Prioridad**: Crítica
+- **Tipo**: API
+- **Precondiciones**: Usuario registrado
+- **Pasos**:
+  1. Llamar a API de login con credenciales válidas
+  2. Verificar respuesta
+- **Resultado Esperado**:
+  - Status code 200
+  - Respuesta contiene datos de usuario
+- **Datos de Prueba**: Credenciales válidas
+
+### TC-API-PRODUCTS-001: Obtener Lista de Productos
+- **ID**: TC-API-PRODUCTS-001
+- **Título**: Validar obtención de lista de productos por API
+- **Prioridad**: Crítica
+- **Tipo**: API
+- **Precondiciones**: Ninguna
+- **Pasos**:
+  1. Llamar a API de productos
+  2. Verificar respuesta
+- **Resultado Esperado**:
+  - Status code 200
+  - Array de productos con estructura válida
+- **Datos de Prueba**: Endpoint de productos
 
 ---
 
 ## Módulo: Validación de Resultados
 
-### TC-VALIDATE-001: Validación de Datos Mostrados
+### TC-VALIDATE-001: Validación Cruzada UI-API
 - **ID**: TC-VALIDATE-001
 - **Título**: Validar que los datos mostrados en UI coinciden con API
 - **Prioridad**: Crítica
@@ -270,35 +360,18 @@ Cada caso de prueba sigue esta estructura:
   - Datos son consistentes entre frontend y backend
 - **Datos de Prueba**: Usuario autenticado
 
-### TC-VALIDATE-002: Validación de Métricas Filtradas
-- **ID**: TC-VALIDATE-002
-- **Título**: Validar que filtros aplicados se reflejan correctamente en datos
-- **Prioridad**: Alta
-- **Tipo**: Integración
-- **Precondiciones**: Usuario autenticado
-- **Pasos**:
-  1. Aplicar filtro por fecha: `01/01/2024` - `31/01/2024`
-  2. Capturar métricas mostradas en UI
-  3. Llamar a API de métricas con mismos filtros
-  4. Comparar resultados
-- **Resultado Esperado**:
-  - Métricas en UI coinciden con respuesta de API
-  - Filtros se aplican correctamente en backend
-- **Datos de Prueba**: 
-  - Fechas: `01/01/2024` - `31/01/2024`
-
 ---
 
 ## Matriz de Trazabilidad
 
 | Requisito | Casos de Prueba | Prioridad | Estado |
 |-----------|----------------|-----------|--------|
-| RQ-001: Autenticación de usuarios | TC-AUTH-001, TC-AUTH-002, TC-AUTH-003 | Crítica | ✅ |
-| RQ-002: Carga de métricas | TC-METRICS-001, TC-METRICS-002 | Crítica | ✅ |
-| RQ-003: Filtrado por fecha | TC-FILTER-001, TC-FILTER-003 | Crítica | ✅ |
-| RQ-004: Filtrado por categoría | TC-FILTER-002, TC-FILTER-003 | Alta | ✅ |
-| RQ-005: Exportación de reportes | TC-EXPORT-001, TC-EXPORT-002 | Alta | ✅ |
-| RQ-006: Validación de datos | TC-VALIDATE-001, TC-VALIDATE-002 | Crítica | ✅ |
+| RQ-001: Autenticación de usuarios | TC-AUTH-001, TC-AUTH-002, TC-AUTH-003, TC-AUTH-004 | Crítica | ✅ |
+| RQ-002: Gestión de carrito | TC-CART-001, TC-CART-002, TC-CART-003, TC-CART-004, TC-CART-005, TC-CART-006 | Crítica | ✅ |
+| RQ-003: Proceso de checkout | TC-CHECKOUT-001, TC-CHECKOUT-002, TC-CHECKOUT-003, TC-CHECKOUT-004, TC-CHECKOUT-005 | Crítica | ✅ |
+| RQ-004: Logout | TC-LOGOUT-001, TC-LOGOUT-002, TC-LOGOUT-003 | Alta | ✅ |
+| RQ-005: APIs de productos | TC-API-PRODUCTS-001 | Crítica | ✅ |
+| RQ-006: Validación de datos | TC-VALIDATE-001 | Crítica | ✅ |
 
 ---
 
@@ -306,9 +379,9 @@ Cada caso de prueba sigue esta estructura:
 
 ### Smoke Tests (Pre-Merge)
 - TC-AUTH-001: Login Exitoso
-- TC-METRICS-001: Carga Exitosa de Métricas
-- TC-FILTER-001: Filtro por Fecha
-- TC-VALIDATE-001: Validación de Datos
+- TC-CART-001: Agregar Producto al Carrito
+- TC-CHECKOUT-001: Navegar al Checkout
+- TC-VALIDATE-001: Validación Cruzada UI-API
 
 ### Suite Completa (Staging)
 - Todos los casos de prioridad Crítica y Alta
@@ -319,4 +392,3 @@ Cada caso de prueba sigue esta estructura:
 - Todos los casos de prueba
 - Validaciones de performance
 - Casos edge adicionales
-
