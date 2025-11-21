@@ -1,0 +1,27 @@
+[
+  {
+    "testCase": "Usuario válido + contraseña inválida",
+    "email": "viviana.rojas9418@gmail.com",
+    "password": "wrongpassword",
+    "expectedError": "Your email or password is incorrect!"
+  },
+  {
+    "testCase": "Correo con formato inválido",
+    "email": "invalid-email",
+    "password": "1234567890*",
+    "expectedError": "Please enter a valid email address"
+  },
+  {
+    "testCase": "Usuario inexistente",
+    "email": "nonexistent@example.com",
+    "password": "1234567890*",
+    "expectedError": "Your email or password is incorrect!"
+  },
+  {
+    "testCase": "Ambos campos vacíos",
+    "email": "",
+    "password": "",
+    "expectedError": "Email and password are required"
+  }
+]
+
